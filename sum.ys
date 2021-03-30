@@ -1,0 +1,56 @@
+.pos 0x0
+           irmovl $0,   %ecx     # loop = 0
+           irmovl $0,   %ebx     # total = 0
+           irmovl $0,   %edx     # uoffset
+
+ n:
+           irmovl arr,  %eax     # %eax = base of arr
+           addl   %eax, %esi     # %esi = addr of val
+
+           mrmovl (%esi), %eax   # %eax = arr[i]
+           addl   %eax, %ebx     # total += arr[i]
+
+           rrmovl %edx, %esi     # %esi = %edx
+          irmovl arr,  %eax     # %eax = base of arr, general register
+          addl   %eax, %esi     # %esi = base + offset
+
+
+
+          rmmovl %ebx, (%esi)   # arr[loop] = offset
+          irmovl $4,   %eax     # get ready to compute next addr in arr
+          addl   %eax, %edx     # offset increased by 4 bytes
+
+          irmovl $2,  %edi     # end loop val
+          subl   %ecx, %edi     # %edi = %edi - %ecx
+          jge     summation
+          halt
+
+
+
+summation:
+           irmovl $10,   %eax     # set it to 10
+           subl %eax, %ebx #subtract 10 from total
+           irmovl $0,   %edx     # get ready to incr i
+
+
+          multiplication:   rrmovl %ecx,   %eax     # get ready to add i
+                       addl   %ecx, %ebx     # total += i
+
+                       irmovl $1,   %eax     # get ready to incr i
+                       addl %eax,   %edx     # get ready to incr i
+
+
+                       irmovl $6,  %edi     # end loop val
+                       subl   %edx, %edi     # %edi = %edi - %edx
+
+                       jge    multiplication       # while (n <=10 )
+
+           irmovl $1,   %eax     # get ready to incr i
+           addl   %eax, %ecx     # i++
+           jge    n       # while (i < 20)
+
+
+
+
+.align 4
+arr:
